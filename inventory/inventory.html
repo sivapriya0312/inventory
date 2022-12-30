@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Inventory</title>
+		<style>
+			*{margin:0px;padding:0px;}
+			.div1{width:33%;float:left;border:1px solid #ccc;min-height:100vh;}
+			#div2{width:33%;float:left;border:1px solid #ccc;min-height:100vh;overflow-y:auto;}
+			#div3{width:33%;float:left;border:1px solid #ccc;min-height:100vh;}
+		</style>
+	</head>
+	<body>
+		<div class="div1">
+			<label>Firstname</label>
+			<input type="text" name="firstname" id="firstname"/><br>
+			<label>Lastname</label>
+			<input type="text" name="lastname" id="lastname"/><br/>
+			<label>Email</label>
+			<input type="email" name="email" id="email"/><br/>
+			<label>Phone</label>
+			<input type="number" name="phone" id="phone"/><br/>
+			<input type="button" name="data_submit" id="data_submit" value="Click" onclick="add_data()"/><br>
+
+
+			<label>Firstname</label>
+			<input type="text" name="firstname1" id="firstname1"/><br>
+			<input type="text" name="id1" id="id1"/><br>
+			<label>Lastname</label>
+			<input type="text" name="lastname1" id="lastname1"/><br/>
+			<label>Email</label>
+			<input type="email" name="email1" id="email1"/><br/>
+			<label>Phone</label>
+			<input type="number" name="phone1" id="phone1"/><br/>
+			<input type="button" name="data_submit1" id="data_submit1" value="Click" onclick="add_data1()"/>
+			
+		</div>
+		<div id="div2">
+
+		</div>
+		<div id="div3">
+			<table width="100%" border="1">
+				<thead>
+					<tr>
+						<th>Firstname</th>
+						<th>Lastname</th>
+						<th>Email</th>
+						<th>Phone</th>
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody id="table_dis"></tbody>
+			</table>
+			<a onclick="data_down()">Download</a>
+		</div>
+
+		<script>
+
+			var arr = [];
+
+			function add_data(){
+				var firstname = document.getElementById('firstname').value;
+				var lastname = document.getElementById('lastname').value;
+				var email = document.getElementById('email').value;
+				var phone = document.getElementById('phone').value;
+
+				var obj = {"firstname":firstname,"lastname":lastname,"email":email,"phone":phone};
+
+				//alert(JSON.stringify(obj));
+
+				arr.push(obj);
+				display_data();
+
+			}
+
+			function display_data(){
+				var s = JSON.stringify(arr);
+				document.getElementById('div2').innerHTML = s;
+				display_table();
+			}
+
+			function display_table(){
+				var s1 = '';
+				arr.forEach(function(value,index){
+					s1 += '<tr align="center">';
+					s1 += '<td>'+value.firstname+'</td>';
+					s1 += '<td>'+value.lastname+'</td>';
+					s1 += '<td>'+value.email+'</td>';
+					s1 += '<td>'+value.phone+'</td>';
+					s1 += '<td><input type="button" name="data_del" id="data_del" onClick="data_del('+index+')" value="delete"><input type="button" name="data_del" id="data_del" onClick="data_edit('+index+')" value="Edit"></td>';
+				})
+				document.getElementById('table_dis').innerHTML = s1;
+			}
+
+			function data_del(id){
+				arr.splice(id,1);
+				display_data();
+			}
+
+			function data_edit(id1){
+				var s = arr[id1];
+				document.getElementById('id1').value = id1;
+				document.getElementById('firstname1').value = s.firstname;
+				document.getElementById('lastname1').value = s.lastname;
+				document.getElementById('email1').value = s.email;
+				document.getElementById('phone1').value = s.phone;
+			}
+
+			function add_data1(){
+				var firstname = document.getElementById('firstname1').value;
+				var lastname = document.getElementById('lastname1').value;
+				var email = document.getElementById('email1').value;
+				var phone = document.getElementById('phone1').value;
+				var id = document.getElementById('id1').value;
+
+				var obj = {"firstname":firstname,"lastname":lastname,"email":email,"phone":phone};	
+				arr.splice(id,1, obj);
+				display_data();
+			}
+
+			function data_down(){
+				s();
+			}
+
+			function s(){
+				var j = document.getElementById('div2').textContent;
+				var blob = new Blob([j],{type:'octet/stream'});
+				var an = document.createElement('a');
+				an.download = 'user.json';
+				an.href = window.URL.createObjectURL(blob);
+				an.click();
+
+			}
+
+		</script>
+
+	</body>
+</html>
